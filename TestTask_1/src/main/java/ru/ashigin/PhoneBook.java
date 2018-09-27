@@ -1,5 +1,7 @@
 package ru.ashigin;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,24 +10,19 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class PhoneBook {
-    private Map<String, List> phoneBook;
+    private Map<String, List> phoneBook = new HashMap<>();
 
     public PhoneBook() {
-        if (phoneBook == null) {
-            phoneBook = new HashMap<>();
-            setDataToPhoneBook();
-        }
+        setDataToPhoneBook();
     }
 
-    public void showPhoneNumbers() {
-        List<String> listOfPhone = getListOfPhone();
-
+    public void showPhoneNumbers(List<String> listOfPhone, PrintStream out) {
         if (listOfPhone == null || listOfPhone.isEmpty()) {
-            System.out.println("There is no such user in the database!");
+            out.print("There is no such user in the database!");
         } else {
             int index = 1;
             for (String phone : listOfPhone) {
-                System.out.printf("%s. %s\n", index++, phone);
+                out.printf("%s. %s\n", index++, phone);
             }
         }
     }
@@ -37,9 +34,7 @@ public class PhoneBook {
         phoneBook.put("Михайлов М.М.", new ArrayList<>());
     }
 
-    private List<String> getListOfPhone() {
-        String user = enterUser();
-
+    public List<String> getListOfPhone(String user) {
         for (String key : phoneBook.keySet()) {
             if (key.replace(" ", "").toLowerCase().equals(user)) {
                 return phoneBook.get(key);
@@ -48,14 +43,9 @@ public class PhoneBook {
         return null;
     }
 
-    private String enterUser() {
-        Scanner in = new Scanner(System.in);
+    public String enterUser(InputStream in) {
+        Scanner keyboard = new Scanner(in);
         System.out.println("Enter user: ");
-        return in.nextLine().replace(" ", "").toLowerCase();
-    }
-
-    public static void main(String[] args) {
-        PhoneBook pb = new PhoneBook();
-        pb.showPhoneNumbers();
+        return keyboard.nextLine().replace(" ", "").toLowerCase();
     }
 }
